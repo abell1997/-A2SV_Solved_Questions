@@ -1,5 +1,4 @@
-#Geeks for Geeks
-
+#GeeksforGeeks
 
 class Solution:
     def isSubset(self, a, b):
