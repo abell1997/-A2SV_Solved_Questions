@@ -14,5 +14,4 @@ class Solution:
                     left += 1
                 res += right - left + 1
             return res
-        
         return mostK(nums, k) - mostK(nums, k - 1)
