@@ -1,16 +1,16 @@
 class Solution:
         def splitString(self, s: str) -> bool: 
-            def backtrack(start, prev):
+            def rec(start , parts , prev):
                 if start == len(s):
-                    return True
+                    return parts >= 2
+
+                for i in range(start , len(s)):
+                    num = int(s[start : i + 1])
+
+                    if prev == -10000 or num == prev - 1:
+                        if rec(i+1 , parts+1 , num):
+                            return True
                 
-                for end in range(start + 1, len(s) + 1):
-                    num_str = s[start:end]
-                    num = int(num_str)
-                    
-                    if prev is not None and num >= prev:
-                        continue
-                    if backtrack(end, num):
-                        return True
                 return False
-            return backtrack(0, None)
+            return rec(0 , 0 , -10000) 
+                  
