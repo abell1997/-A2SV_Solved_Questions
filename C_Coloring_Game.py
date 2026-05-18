@@ -1,81 +1,41 @@
-""" C. Coloring Game
-time limit per test2.5 seconds
-memory limit per test256 megabytes
-Alice and Bob are playing a game using an integer array a of size n.
+import sys
+from bisect import bisect_right
 
-Initially, all elements of the array are colorless. First, Alice chooses 3
- elements and colors them red. Then Bob chooses any element and colors it blue (if it was red — recolor it). Alice wins if the sum of the red elements is strictly greater than the value of the blue element.
+def solve():
+    input = sys.stdin.read
+    data = input().split()
+    
+    if not data:
+        return
 
-Your task is to calculate the number of ways that Alice can choose 3
- elements in order to win regardless of Bob's actions.
+    t = int(data[0])
+    idx = 1
+    
+    out = []
+    for _ in range(t):
+        n = int(data[idx])
+        a = [int(x) for x in data[idx+1 : idx+1+n]]
+        idx += 1 + n
+        
+        a.sort()
+        
+        ans = 0
+        max_val = a[-1]
+        
+        for i in range(n):
+            a_i = a[i]
+            target_base = max(a_i, max_val - a_i)
+            
+            for j in range(i):
+                a_j = a[j]
+                threshold = target_base - a_j
+                
+                k = bisect_right(a, threshold, 0, j)
+                ans += (j - k)
+                
+        out.append(str(ans))
+        
+    sys.stdout.write("\n".join(out) + "\n")
 
-Input
-The first line contains a single integer t
- (1≤t≤1000) — the number of test cases.
-The first line of each test case contains a single integer n (3≤n≤5000).
-
-The second line contains n
- integers a1,a2,…,an
- (1≤a1≤a2≤⋯≤an≤105).
-
-Additional constraint on the input: the sum of n
- over all test cases doesn't exceed 5000.
-
-Output
-For each test case, print a single integer — the number of ways that Alice can choose 3
- elements in order to win regardless of Bob's actions.
-
-Example
-Input
-6
-3
-1 2 3
-4
-1 1 2 4
-5
-7 7 7 7 7
-5
-1 1 2 2 4
-6
-2 3 3 4 5 5
-5
-1 1 1 1 3
-Output
-0
-0
-10
-2
-16
-0
-Note
-In the first two test cases, no matter which three elements Alice chooses, Bob will be able to paint one element blue so that Alice does not win.
-
-In the third test case, Alice can choose any three elements. If Bob colors one of the red elements, the sum of red elements will be 14
-, and the sum of blue elements will be 7. If Bob chooses an uncolored element, the sum of red elements will be 21
-, and the sum of blue elements will be 7.
-
-In the fourth test case, Alice can choose either the 1-st, 3-rd and 4-th element, or the 2-nd, 3-rd and 4-th element.
-
-
-read and understand the problem statement above and implement the solution
-
-
- """
-t = int(input())
-for _ in range(t):
-    n = int(input())
-    a = list(map(int, input().split()))
-
-    prefix_sum = [0] * (n + 1)
-    for i in range(n):
-        prefix_sum[i + 1] = prefix_sum[i] + 1
-
-    ans = 0
-    for i in range(n):
-        for j in range(i):
-            need = max(a[-1], 2 * a[i]) - a[i] - a[j]
-            pos = 0
-            while pos < j and a[pos] <= need:
-                pos += 1
-            ans += j - pos
-    print(ans)   #Same thing stil TLE
+if __name__ == '__main__':
+    solve()
